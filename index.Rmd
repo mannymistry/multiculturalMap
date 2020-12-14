@@ -1,0 +1,129 @@
+---
+title: "Where are we from?"
+output: flexdashboard::flex_dashboard
+
+---
+Readme first
+=====================================     
+
+**This website is meant to visualize which countries in this world HOOPP employees have a strong connection to** 
+
+**The survey question:** 
+
+List all and any cities and or countries you feel as if you have a connection with. You might have been born there, your spouse might have been born, you might have never been there but you eat cuisine from that 
+country on a weekly basis and you plan to visit as soon as COVID is over. Anything goes, we want to 
+visualize the countries we all connect with and share it with you. Over the course of the year we will enhance the map and use the data to provide relevant programming for you!
+
+**The Data:**
+
+The current map is using a random sample of 200 cities from world.cities dataset. 
+
+We can collect the data in any format however a survey with output in excel would be ideal with columns for cities and countries. After correcting for incorrect and missing values the dataset is 
+joined with the world.cities dataset which provides the longitude for latitude. If we plan to build on this
+we can collect more information about the countries and cities and continue to layer the map
+
+**The Tech:**
+
+This website was built using the following open source software and packages:
+
+ - [R](https://www.r-project.org/)
+ - [RMarkdown](https://rmarkdown.rstudio.com/) 
+ - [Leaflet](https://rstudio.github.io/leaflet/) 
+ - [Flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/index.html)
+ - [maps](https://cran.r-project.org/web/packages/maps/maps.pdf)
+ - [tidyverse](https://www.tidyverse.org/)
+
+The output is a static html file which we should be able to host on Sharepoint with 
+little to no configuration. See link below 
+
+https://sharepoint.handsontek.net/2019/06/13/how-to-host-a-static-html-site-on-sharepoint/
+
+**A Couple Why's**
+
+*Why don't we just ask where are you born or what country do you come from?*
+
+There are a number of reasons why wouldn't want to ask such a direct question just a few are below that I could think of, I think it would be a good exercise as a group to come up with reasons why such a direct 
+question could 
+
+-  An employee could have fled their home country to seek haven in Canada and they 
+may still feel uncomfortable identifying where they born in fear of reprisals. 
+
+- We may only get so many people to answer the survey, and if respondents answer
+with only one country or city it will be sparsely populated map. The more data points
+the better. 
+
+*Why open source? * 
+
+A couple of reasons, first being the output is a static html file. All the data
+is within that file and requires no connections to databases etc. It should be able 
+to be hosted our SharePoint seamlessly. 
+If this project gains wide spread engagement at HOOPP it would be awesome to be able  
+to share the same the tool with ERG's outside of HOOPP. Writing this tool 
+using open source software makes this much easier to do. 
+
+*Why not more features right away?*
+
+We could use this tool as a working project layering the map with markers, shapes 
+etc etc as the year goes on to keep people engaged with our group. Slowly adding features. 
+
+Capital City Markers
+=====================================     
+    
+Column {data-width=1000}
+-------------------------------------
+    
+### We all come from somewhere!
+
+This map simply marks the capital cities and labels the countries from of
+the countries from the survey results. 
+    
+```{r}
+library(flexdashboard)
+library(tidyverse)
+library(leaflet)
+library(maps)
+library(htmlwidgets)
+
+data(world.cities)
+
+# Select 200 random countries
+survey_results <- slice_sample(world.cities, n = 200)
+
+capital_cites <- world.cities %>% 
+  filter(capital == 1)
+
+
+grouped_countries <- survey_results %>% 
+  group_by(country.etc) %>% 
+  tally() %>% 
+  left_join(capital_cites, by = c("country.etc"))
+
+grouped_countries %>% 
+  leaflet() %>%
+  addTiles() %>%
+  addCircles(label = ~paste("", country.etc), popup = ~name)
+
+```
+
+Radius Based On Counts
+=====================================     
+
+    
+Column {data-width=1000}
+-------------------------------------
+    
+### We all come from somewhere!
+
+This maps marks a circle around the capital cities that employees most connect with. 
+The more people that associate with a particular city the larger the radius of the 
+circle. 
+    
+```{r}
+
+grouped_countries %>% 
+  leaflet() %>%
+  addTiles() %>%
+  addCircles(label = ~paste("", country.etc), 
+              radius = ~(n * 100000)  , popup = ~name)
+
+```
