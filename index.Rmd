@@ -12,15 +12,15 @@ Readme first
 
 List all and any cities and or countries you feel as if you have a connection with. You might have been born there, your spouse might have been born, you might have never been there but you eat cuisine from that 
 country on a weekly basis and you plan to visit as soon as COVID is over. Anything goes, we want to 
-visualize the countries we all connect with and share it with you. Over the course of the year we will enhance the map and use the data to provide relevant programming for you!
+visualize the countries we all connect with and share it with you. Over the course of the year we will enhance the map and use the data to provide relevant content!
 
 **The Data:**
 
 The current map is using a random sample of 200 cities from world.cities dataset. 
 
 We can collect the data in any format however a survey with output in excel would be ideal with columns for cities and countries. After correcting for incorrect and missing values the dataset is 
-joined with the world.cities dataset which provides the longitude for latitude. If we plan to build on this
-we can collect more information about the countries and cities and continue to layer the map
+joined with the world.cities dataset which provides the longitude for latitude of the cities. If we plan to build on this
+we can collect more information about the countries and cities and continue to layer the map. 
 
 **The Tech:**
 
@@ -56,15 +56,13 @@ the better.
 
 A couple of reasons, first being the output is a static html file. All the data
 is within that file and requires no connections to databases etc. It should be able 
-to be hosted our SharePoint seamlessly. 
-If this project gains wide spread engagement at HOOPP it would be awesome to be able  
-to share the same the tool with ERG's outside of HOOPP. Writing this tool 
-using open source software makes this much easier to do. 
+to be hosted our SharePoint seamlessly. If this project gains wide spread engagement at HOOPP it would be awesome to be able to share the same the tool with ERG's outside of HOOPP. Writing this tool 
+using open source software makes this much easier to do. Vice versa if an outside ERG would like to contribute to the development of the tool they could as well. Note that none of the location data would reside in the open source repository that would all be stored in house. 
 
 *Why not more features right away?*
 
 We could use this tool as a working project layering the map with markers, shapes 
-etc etc as the year goes on to keep people engaged with our group. Slowly adding features. 
+etc etc as the year goes on to keep people engaged with our group and getting feedback along the way. 
 
 Capital City Markers
 =====================================     
@@ -74,8 +72,7 @@ Column {data-width=1000}
     
 ### We all come from somewhere!
 
-This map simply marks the capital cities and labels the countries from of
-the countries from the survey results. 
+This map simply marks the capital cities and labels the countries that employees most connect with.  
     
 ```{r}
 library(flexdashboard)
@@ -91,7 +88,6 @@ survey_results <- slice_sample(world.cities, n = 200)
 
 capital_cites <- world.cities %>% 
   filter(capital == 1)
-
 
 grouped_countries <- survey_results %>% 
   group_by(country.etc) %>% 
